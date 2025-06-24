@@ -1,31 +1,27 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EV Charging and Range Analysis</title>
-    <link rel="stylesheet" href="styles.css">
+  <title>EV Charging Data Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <header>
-        <h1>Electric Vehicle Charging & Range Analysis</h1>
-    </header>
 
-    <section id="charts">
-        <div class="chart-container">
-            <canvas id="batteryChart"></canvas>
-        </div>
-        <div class="chart-container">
-            <canvas id="efficiencyChart"></canvas>
-        </div>
-    </section>
+  <h2>Charging Power (kWh) Per Session</h2>
+  <div class="chart-container">
+    <canvas id="kwhChart"></canvas>
+  </div>
 
-    <footer>
-        <p>&copy; 2025 EV Analysis Tool. All Rights Reserved.</p>
-    </footer>
+  <h2>Cost ($) Per Session</h2>
+  <div class="chart-container">
+    <canvas id="costChart"></canvas>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="script.js"></script>
+  <h2>Top 5 Costly Sessions</h2>
+  <div class="chart-container">
+    <canvas id="pieChart"></canvas>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

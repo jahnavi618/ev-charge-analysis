@@ -1,53 +1,67 @@
+fetch("station_data_dataverse.csv")
+  .then(response => response.text())
+  .then(data => {
+    const rows = data.split("\n").slice(1); // Skip header row
+    const sessionIds = [];
+    const kwhList = [];
+    const costList = [];
 
-// Sample data (to be replaced with actual data from CSV)
-const dates = ['2025-06-01', '2025-06-02', '2025-06-03', '2025-06-04', '2025-06-05'];
-const batteryStart = [30, 40, 50, 60, 70];
-const batteryEnd = [50, 60, 70, 80, 90];
-const distance = [40, 50, 60, 70, 80];
+    rows.forEach(row => {
+      const cols = row.split(","); // CSV is comma-separated
+      const sessionId = cols[0];
+      const kwh = parseFloat(cols[1]);
+      const dollars = parseFloat(cols[2]);
 
-// Battery Chart
-const ctx1 = document.getElementById('batteryChart').getContext('2d');
-const batteryChart = new Chart(ctx1, {
-    type: 'line',
-    data: {
-        labels: dates,
+      if (!isNaN(kwh) && !isNaN(dollars)) {
+        sessionIds.push(sessionId);
+        kwhList.push(kwh);
+        costList.push(dollars);
+      }
+    });
+
+    // Line chart for kWh per session
+    new Chart(document.getElementById('kwhChart'), {
+      type: 'line',
+      data: {
+        labels: sessionIds.slice(0, 20),
         datasets: [{
-            label: 'Battery Start (%)',
-            data: batteryStart,
-            borderColor: 'rgb(75, 192, 192)',
-            fill: false
-        }, {
-            label: 'Battery End (%)',
-            data: batteryEnd,
-            borderColor: 'rgb(153, 102, 255)',
-            fill: false
+          label: 'kWh Total',
+          data: kwhList.slice(0, 20),
+          borderColor: 'blue',
+          fill: false
         }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                min: 0,
-                max: 100
-            }
-        }
-    }
-});
+      }
+    });
 
-// Efficiency Chart
-const efficiency = distance.map((dist, index) => dist / (batteryEnd[index] - batteryStart[index]));
-const ctx2 = document.getElementById('efficiencyChart').getContext('2d');
-const efficiencyChart = new Chart(ctx2, {
-    type: 'bar',
-    data: {
-        labels: dates,
+    // Line chart for Cost per session
+    new Chart(document.getElementById('costChart'), {
+      type: 'line',
+      data: {
+        labels: sessionIds.slice(0, 20),
         datasets: [{
-            label: 'Efficiency (km per % Battery)',
-            data: efficiency,
-            backgroundColor: 'rgb(255, 159, 64)'
+          label: 'Cost ($)',
+          data: costList.slice(0, 20),
+          borderColor: 'green',
+          fill: false
         }]
-    },
-    options: {
-        responsive: true
-    }
-});
+      }
+    });
+
+    // Pie chart for Top 5 Costly Sessions
+    const top5 = costList
+      .map((cost, idx) => ({ cost, sessionId: sessionIds[idx] }))
+      .sort((a, b) => b.cost - a.cost)
+      .slice(0, 5);
+
+    new Chart(document.getElementById('pieChart'), {
+      type: 'pie',
+      data: {
+        labels: top5.map(item => item.sessionId),
+        datasets: [{
+          label: 'Top 5 Costly Sessions',
+          data: top5.map(item => item.cost),
+          backgroundColor: ['red', 'orange', 'yellow', 'green', 'blue']
+        }]
+      }
+    });
+  });
