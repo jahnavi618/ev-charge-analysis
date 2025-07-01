@@ -1,0 +1,23 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #eaf6ff;
+  padding: 20px;
+  margin: 0;
+  text-align: center;
+}
+
+h2 {
+  color: #333;
+  margin-top: 40px;
+  font-size: 22px;
+}
+
+.chart-container {
+  width: 80%;
+  max-width: 800px;
+  margin: 20px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
