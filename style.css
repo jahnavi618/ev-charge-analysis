@@ -1,20 +1,23 @@
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background-color: #f0f8ff;
-  padding: 30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #eaf6ff;
+  padding: 20px;
   margin: 0;
+  text-align: center;
 }
 
 h2 {
   color: #333;
+  margin-top: 40px;
+  font-size: 22px;
 }
 
 .chart-container {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #ccc;
+  width: 80%;
+  max-width: 800px;
+  margin: 20px auto;
+  background: #fff;
   padding: 20px;
-  margin: 30px auto;
-  max-width: 700px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }

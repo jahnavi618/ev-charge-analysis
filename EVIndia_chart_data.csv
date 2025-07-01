@@ -1,0 +1,10 @@
+car_name,car_type,range_km,PriceRange,BootSpace
+Tata Nexon,Compact SUV,312,17.4,350
+Tata Tigor,Subcompact Sedan,306,13.64,316
+Tata Nexon,Compact SUV,437,19.24,350
+MG ZS EV,Compact SUV,419,25.88,448
+Hyundai K,Compact SUV,452,23.98,528
+Jaguar I-Pace,Premium SUV,470,112.0,656
+Audi E-Tron,Premium SUV,488,180.0,405
+BYD E6,MPV,520,29.15,580
+Mercedes EQB,Luxury SUV,471,100.0,495

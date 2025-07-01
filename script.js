@@ -1,67 +1,108 @@
-fetch("station_data_dataverse.csv")
+fetch("EVIndia_chart_data.csv")
   .then(response => response.text())
   .then(data => {
-    const rows = data.split("\n").slice(1); // Skip header row
-    const sessionIds = [];
-    const kwhList = [];
-    const costList = [];
+    const rows = data.trim().split("\n").slice(1);
+    const carNames = [], rangeList = [], priceList = [], typeCount = {}, bootList = [];
 
     rows.forEach(row => {
-      const cols = row.split(","); // CSV is comma-separated
-      const sessionId = cols[0];
-      const kwh = parseFloat(cols[1]);
-      const dollars = parseFloat(cols[2]);
+      const cols = row.split(",");
+      const name = cols[0].trim();
+      const type = cols[1].trim();
+      const range = parseFloat(cols[2]);
+      const price = parseFloat(cols[3]);
+      const boot = parseInt(cols[4]);
 
-      if (!isNaN(kwh) && !isNaN(dollars)) {
-        sessionIds.push(sessionId);
-        kwhList.push(kwh);
-        costList.push(dollars);
+      if (!isNaN(range) && !isNaN(price) && !isNaN(boot)) {
+        carNames.push(name);
+        rangeList.push(range);
+        priceList.push(price);
+        bootList.push(boot);
+
+        typeCount[type] = (typeCount[type] || 0) + 1;
       }
     });
 
-    // Line chart for kWh per session
-    new Chart(document.getElementById('kwhChart'), {
-      type: 'line',
+    // Chart 1: Range
+    new Chart(document.getElementById("rangeChart"), {
+      type: "bar",
       data: {
-        labels: sessionIds.slice(0, 20),
+        labels: carNames,
         datasets: [{
-          label: 'kWh Total',
-          data: kwhList.slice(0, 20),
-          borderColor: 'blue',
-          fill: false
+          label: "Range (km)",
+          data: rangeList,
+          backgroundColor: "skyblue"
         }]
       }
     });
 
-    // Line chart for Cost per session
-    new Chart(document.getElementById('costChart'), {
-      type: 'line',
+    // Chart 2: Price
+    new Chart(document.getElementById("priceChart"), {
+      type: "bar",
       data: {
-        labels: sessionIds.slice(0, 20),
+        labels: carNames,
         datasets: [{
-          label: 'Cost ($)',
-          data: costList.slice(0, 20),
-          borderColor: 'green',
-          fill: false
+          label: "Price (Lakhs)",
+          data: priceList,
+          backgroundColor: "orange"
         }]
       }
     });
 
-    // Pie chart for Top 5 Costly Sessions
-    const top5 = costList
-      .map((cost, idx) => ({ cost, sessionId: sessionIds[idx] }))
-      .sort((a, b) => b.cost - a.cost)
-      .slice(0, 5);
-
-    new Chart(document.getElementById('pieChart'), {
-      type: 'pie',
+    // Chart 3: Car Type Pie
+    new Chart(document.getElementById("carTypeChart"), {
+      type: "pie",
       data: {
-        labels: top5.map(item => item.sessionId),
+        labels: Object.keys(typeCount),
         datasets: [{
-          label: 'Top 5 Costly Sessions',
-          data: top5.map(item => item.cost),
-          backgroundColor: ['red', 'orange', 'yellow', 'green', 'blue']
+          label: "Car Type",
+          data: Object.values(typeCount),
+          backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#9ccc65", "#ab47bc"]
         }]
       }
     });
+
+    // Chart 4: Range vs Price Line
+    new Chart(document.getElementById("rangeVsPriceChart"), {
+      type: "line",
+      data: {
+        labels: carNames,
+        datasets: [
+          {
+            label: "Range (km)",
+            data: rangeList,
+            borderColor: "blue",
+            fill: false
+          },
+          {
+            label: "Price (Lakhs)",
+            data: priceList,
+            borderColor: "red",
+            fill: false
+          }
+        ]
+      }
+    });
+
+    // Chart 5: Boot Space Doughnut
+    let small = 0, medium = 0, large = 0;
+    bootList.forEach(b => {
+      if (b < 400) small++;
+      else if (b <= 500) medium++;
+      else large++;
+    });
+
+    new Chart(document.getElementById("bootChart"), {
+      type: "doughnut",
+      data: {
+        labels: ["Small (<400L)", "Medium (400-500L)", "Large (>500L)"],
+        datasets: [{
+          data: [small, medium, large],
+          backgroundColor: ["#FF9999", "#FFCC66", "#66CC99"]
+        }]
+      }
+    });
+
+  })
+  .catch(error => {
+    console.error("Error loading CSV:", error);
   });
